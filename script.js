@@ -37,5 +37,16 @@ $("#search").on("click", function(event){
     var cityDiv = $("<div class='cities'>");
     var city = ("#city-input").val().trim();
 
+    var queryURL = "api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f";
+
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+      }).then(function(response) {
+        $("#cities").text(JSON.stringify(response));
+      });
+
+
+
     cityDiv.prepend(city);
 });
