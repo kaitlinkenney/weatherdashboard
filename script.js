@@ -1,9 +1,9 @@
 console.log("this is working");
 
-function displayWeatherInfo() {
+function displayCurrent() {
 
     var city = $(this).attr("weatherdata")
-    var queryURL = "api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f";
+    var queryURL = "api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f";
 
     $.ajax({
         url: queryURL,
@@ -84,4 +84,4 @@ var previousCities;
         cityDiv.prepend(city);
     });
 
-    displayWeatherInfo();
+    displayCurrent();
