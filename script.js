@@ -31,27 +31,27 @@ function displayCurrent(city) {
 
         $("#jumbo").append(weatherDiv);
         var lat = reponse.coord.lat;
-        var long = response.coord.lon;
-        displayUV(lat, long);
+        var lon = response.coord.lon;
+        displayUV(lat, lon);
     
     })
 };
 
-// function displayUV (){
-//     var queryURL = http://api.openweathermap.org/data/2.5/uvi?lat={lat}&lon={lon}&appid=fd9e64d7b57ef3d61cfb920579f1e31f"
+function displayUV (lat, lon){
+    var queryURL = "http://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f";
 
-//     $.ajax({
-//         url: queryURL,
-//         method: "GET"
-//     }).then(function (response) {
-//         console.log(response);
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+    }).then(function (response) {
+        console.log(response);
 
-//         var uvDiv = ($"<div class='uv'>");
+        // var uvDiv = ($"<div class='uv'>");
 
-//         var uvIndex = response.coord
+        var uvIndex = response.coord
         
-//     })
-// }
+    })
+}
 
 
 function displayForecast(city) {
