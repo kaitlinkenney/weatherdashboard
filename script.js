@@ -1,23 +1,27 @@
 console.log("this is working");
+var city;
 
-function displayCurrent() {
+function displayCurrent(city) {
 
-    var city = $(this).attr("weatherdata")
-    var queryURL = "api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f";
+
+    console.log(city);
+    
+    var queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f";
 
     $.ajax({
         url: queryURL,
-        method: "GET"
+        method: "GET",
+        dataType: "json"
     }).then(function (response) {
         console.log(response);
 
         var weatherDiv = $("<div class='weather'>");
 
-        var temp = reponse.temp;
+        var temp = response.main.temp;
         var pOne = $("<p>").text("Temperature: " + temp);
         weatherDiv.append(pOne);
 
-        var humidity = response.humidity;
+        var humidity = response.main.humidity;
         var pTwo = $("<p>").text("Humidity: " + humidity);
         weatherDiv.append(pTwo);
 
@@ -25,6 +29,10 @@ function displayCurrent() {
         var pThree = $("<p>").text("Wind speed: " + windSpeed);
         weatherDiv.append(pThree);
 
+        $("#jumbo").append(weatherDiv);
+        var lat = reponse.coord.lat;
+        var long = response.coord.lon;
+        displayUV(lat, long);
     
     })
 };
@@ -40,18 +48,21 @@ function displayCurrent() {
 
 //         var uvDiv = ($"<div class='uv'>");
 
-//         var uvIndex = response.
+//         var uvIndex = response.coord
         
 //     })
 // }
 
 
-function searchClick() {
-    var queryURL = "api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f";
+function displayForecast(city) {
+    console.log(city);
+    var queryURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f";
 
     $.ajax({
         url: queryURL,
-        method: "GET"});
+        method: "GET",
+        dataType: "json"
+    });
     // }).then(function (response) {
     //     $("#cities").text(city);
     // });
@@ -74,14 +85,14 @@ var previousCities;
     $("#search").on("click", function (event) {
         event.preventDefault();
 
+        city = $("#city-input").val().trim();
         var cityDiv = $("<div class='cities'>");
-    var city = $("#city-input").val().trim();
         console.log(city);
 
-    searchClick(city);
+    displayForecast(city);
 
 
         cityDiv.prepend(city);
-    });
 
-    displayCurrent();
+        displayCurrent(city);
+    });
