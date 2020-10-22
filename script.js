@@ -3,7 +3,6 @@ var city;
 
 function displayCurrent(city) {
 
-
     console.log(city);
     
     var queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f";
@@ -14,18 +13,19 @@ function displayCurrent(city) {
         dataType: "json"
     }).then(function (response) {
         console.log(response);
+        $("weatherDiv").empty();
 
         var weatherDiv = $("<div class='weather'>");
 
-        // var currentDate = moment().format("L");
-        // weatherDiv.append(currentDate);
+        var currentDate = moment().format("L");
+        pZero = $("<p>").text("Date: " + currentDate);
+        weatherDiv.append(pZero);
 
-        var iconUrl = response.weather[0].icon;
-        // var iconImage = $("<img>");
-        // iconImage.attr("src", iconUrl);
-        weatherDiv.append(iconUrl);
-
-        var temp = response.main.temp;
+        // var iconUrl = response.weather[0].icon;
+        // // var iconImage = $("<img>");
+        // // iconImage.attr("src", iconUrl);
+        // weatherDiv.append(iconUrl);
+        
         var tempF = (response.main.temp - 273.15) * 1.80 + 32;
         var pOne = $("<p>").text("Temperature: " + tempF.toFixed(2) + " Farenheit");
         weatherDiv.append(pOne);
@@ -39,32 +39,38 @@ function displayCurrent(city) {
         weatherDiv.append(pThree);
 
         $("#jumbo").append(weatherDiv);
-        var lat = reponse.coord.lat;
-        var lon = response.coord.lon;
         
-        displayUV(lat, lon);
-    
     })
 };
 
-// function displayUV (lat, lon){
-//     var queryURL = "http://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f";
+var lat;
+var lon;
 
-//     $.ajax({
-//         url: queryURL,
-//         method: "GET",
-//         dataType: "json"
-//     }).then(function (response) {
-//         console.log(response);
+function displayUV (lat, lon){
+    var queryURL = "http://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f"
 
-//         var uvDiv = $("<div class='uv'>");
-//         var pFour = $("<p>").text("UV Index: " + );
-//         uvDiv.append(pFour);
+    $.ajax({
+        url: queryURL,
+        method: "GET",
+        dataType: "json"
+    }).then(function (response) {
+        console.log(response);
+
+        lat = reponse.coord.lat;
+        lon = response.coord.lon;
+
+        var uvDiv = $("<div class='uv'>");
+
+        var pFour = $("<p>").text("UV Index: " + "value" );
+        uvDiv.append(pFour);
         
-//         $("#jumbo").append(uvDiv);
-//     })
-// }
+        $("#jumbo").append(uvDiv);
 
+        displayUV(lat, lon);
+
+
+    })
+}
 
 function displayForecast(city) {
     console.log(city);
@@ -79,8 +85,15 @@ function displayForecast(city) {
 
         var forecastDiv = $("<div class='forecast'>");
 
-        var date = response.date
+        var tempF = (response.main.temp - 273.15) * 1.80 + 32;
+        var pOne = $("<p>").text("Temperature: " + tempF.toFixed(2) + " Farenheit");
+        forecastDiv.append(pOne);
 
+        var humid = response.main.humidity;
+        var pTwo = $("<p>").text("Humidity: " + humid + "%");
+        forecastDiv.append(pTwo);
+
+        $(".card").append(forecastDiv);
 
     })
     // function searchWorks(){
@@ -93,10 +106,7 @@ function displayForecast(city) {
 
     // }
 }
-
-var previousCities;
-
-
+// var previousCities;
 
 //on click for history that will run the searchClick.
     $("#search").on("click", function (event) {
@@ -106,10 +116,9 @@ var previousCities;
         var cityDiv = $("<div class='cities'>");
         console.log(city);
 
-    displayForecast(city);
-
-
-        cityDiv.prepend(city);
+        cityDiv.prepend("#city-input");
 
         displayCurrent(city);
+        displayUV(lat, lon);
+        displayForecast(city);
     });
