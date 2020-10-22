@@ -13,7 +13,7 @@ function displayCurrent(city) {
         dataType: "json"
     }).then(function (response) {
         console.log(response);
-        $("weatherDiv").empty();
+        $(".weather").empty();
 
         var weatherDiv = $("<div class='weather'>");
 
