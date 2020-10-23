@@ -4,13 +4,13 @@ var city;
 function displayCurrent(city) {
 
     console.log(city);
-    
-    var queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f";
+
+   //var queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f";
 
     $.ajax({
-        url: queryURL,
-        method: "GET",
-        dataType: "json"
+        type: "GET",
+        url:  "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f",
+        dataType: "json",
     }).then(function (response) {
         console.log(response);
         $(".weather").empty();
@@ -20,12 +20,13 @@ function displayCurrent(city) {
         var currentDate = moment().format("L");
         pZero = $("<p>").text("Date: " + currentDate);
         weatherDiv.append(pZero);
+        // $("#weather_image").attr("src", response.list[0].weather[0].icon+".png");
+        // var iconUrl = response.list[0].weather[0].icon;
+        // var iconImage = $("<img>");
+        // iconImage.attr("src", "http://openweathermap.org/img/w/");
+        // iconImage.append(iconUrl);
 
-        // var iconUrl = response.weather[0].icon;
-        // // var iconImage = $("<img>");
-        // // iconImage.attr("src", iconUrl);
-        // weatherDiv.append(iconUrl);
-        
+
         var tempF = (response.main.temp - 273.15) * 1.80 + 32;
         var pOne = $("<p>").text("Temperature: " + tempF.toFixed(2) + " Farenheit");
         weatherDiv.append(pOne);
@@ -39,86 +40,128 @@ function displayCurrent(city) {
         weatherDiv.append(pThree);
 
         $("#jumbo").append(weatherDiv);
-        
+
     })
 };
 
 var lat;
 var lon;
 
-function displayUV (lat, lon){
-    var queryURL = "http://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f"
+// function displayUV(lat, lon) {
+//     var queryURL = "http://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f"
 
-    $.ajax({
-        url: queryURL,
-        method: "GET",
-        dataType: "json"
-    }).then(function (response) {
-        console.log(response);
+//     $.ajax({
+//         url: queryURL,
+//         method: "GET",
+//         dataType: "json"
+//     }).then(function (response) {
+//         console.log(response);
 
-        lat = reponse.coord.lat;
-        lon = response.coord.lon;
+//         lat = reponse.coord.lat;
+//         lon = response.coord.lon;
 
-        var uvDiv = $("<div class='uv'>");
+//         var uvDiv = $("<div class='uv'>");
 
-        var pFour = $("<p>").text("UV Index: " + "value" );
-        uvDiv.append(pFour);
-        
-        $("#jumbo").append(uvDiv);
+//         var pFour = $("<p>").text("UV Index: " + "value");
+//         uvDiv.append(pFour);
 
-        displayUV(lat, lon);
+//         $("#jumbo").append(uvDiv);
+
+//         displayUV(lat, lon);
 
 
-    })
-}
+//     })
+// }
 
 function displayForecast(city) {
     console.log(city);
-    var queryURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f";
-
+    //var queryURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f";
     $.ajax({
-        url: queryURL,
-        method: "GET",
+        type: "GET",
+        url: "http://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f",
         dataType: "json"
     }).then(function (response) {
         console.log(response);
 
-        var forecastDiv = $("<div class='forecast'>");
+        for (var i = 0; i < response.list.length; i++) {
+            if (response.list[i]["dt_txt"].indexOf("15:00:00") !== -1) {
 
-        var tempF = (response.main.temp - 273.15) * 1.80 + 32;
-        var pOne = $("<p>").text("Temperature: " + tempF.toFixed(2) + " Farenheit");
-        forecastDiv.append(pOne);
+                var forecastDiv = $("<div class='forecast'>");
 
-        var humid = response.main.humidity;
-        var pTwo = $("<p>").text("Humidity: " + humid + "%");
-        forecastDiv.append(pTwo);
+                var tempF = (response.list[i].main.temp - 273.15) * 1.80 + 32;
+                var pOne = $("<p>").text("Temperature: " + tempF.toFixed(2) + " Farenheit");
+                forecastDiv.append(pOne);
 
-        $(".card").append(forecastDiv);
+                var humid = response.list[i].main.humidity;
+                var pTwo = $("<p>").text("Humidity: " + humid + "%");
+                forecastDiv.append(pTwo);
+
+                // $("#one").append(forecastDiv);
+                // $("#two").append(forecastDiv);
+                // $("#three").append(forecastDiv);
+                // $("#four").append(forecastDiv);
+                $(".card").append(forecastDiv, response.list[i]);
+
+
+            }
+        }
+
 
     })
-    // function searchWorks(){
-    //     //create history of search
-    //     if (previousCities.indexof(city) === -1){
-    //         previousCities.push(city);
+}
+
+
+// read value from localstorage and if null set to [], JSON.parse
+var previousCities = [];
+
+// function renderCities(){
+//     $("#cityList").empty();
+
+//     for (var i = 0; i < previousCities.length; i++);
+//     var a = $("<button>")
+//     a.addClass("city-row");
+//     a.attr("data-name", previousCities[i]);
+//     a.text(previousCities[i]);
+//     $("#cityList").append(a);
+// }
+
+//on click for history that will run the searchClick.
+$("#search").on("click", function (event) {
+    event.preventDefault();
+
+    var city = $("#city-input").val().trim();
+
+
+// push to the previousCities array
+    previousCities.push(city);
+
+
+
+
+    // // update previousCities in localstorage (JSON.stringify)
+    localStorage.setItem("previousCities", JSON.stringify(previousCities));
+
+    // // create a div
+    var cityDiv = $("<div class='cities'>");
+    // // add the city to the div
+    cityDiv.append(city);
+    // // preprend that div to your cityList in DOM
+    cityDiv.prepend(previousCities);
+
+    // var all_previousCities = JSON.parse(localStorage.getItem("all_previousCities"));
+
+    
     //         var storedCities= localStorage.setItem("previousCities", JSON.stringify(previousCities));
     //         console.log(storedCities);
     //     }
+    //     var all_previousCities = JSON.parse(localStorage.getItem("all_previousCities"));
+        
+    //     cityDiv.prepend(previousCities);
 
     // }
-}
-// var previousCities;
+    // searchWorks();
 
-//on click for history that will run the searchClick.
-    $("#search").on("click", function (event) {
-        event.preventDefault();
-
-        city = $("#city-input").val().trim();
-        var cityDiv = $("<div class='cities'>");
-        console.log(city);
-
-        cityDiv.prepend("#city-input");
-
-        displayCurrent(city);
-        displayUV(lat, lon);
-        displayForecast(city);
-    });
+    displayCurrent(city);
+    // displayUV(lat, lon);
+    displayForecast(city);
+});
