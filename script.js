@@ -5,18 +5,18 @@ function displayCurrent(city) {
 
     console.log(city);
 
-   //var queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f";
+    //var queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f";
 
     $.ajax({
         type: "GET",
-        url:  "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f",
+        url: "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f",
         dataType: "json",
     }).then(function (response) {
         console.log(response);
         $(".weather").empty();
 
         var weatherDiv = $("<div class='weather'>");
-
+        ;
         var currentDate = moment().format("L");
         pZero = $("<p>").text("Date: " + currentDate);
         weatherDiv.append(pZero);
@@ -25,7 +25,6 @@ function displayCurrent(city) {
         // var iconImage = $("<img>");
         // iconImage.attr("src", "http://openweathermap.org/img/w/");
         // iconImage.append(iconUrl);
-
 
         var tempF = (response.main.temp - 273.15) * 1.80 + 32;
         var pOne = $("<p>").text("Temperature: " + tempF.toFixed(2) + " Farenheit");
@@ -41,37 +40,35 @@ function displayCurrent(city) {
 
         $("#jumbo").append(weatherDiv);
 
+        function displayUV(lat, lon) {
+            var queryURL = "http://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f"
+
+            $.ajax({
+                url: queryURL,
+                method: "GET",
+                dataType: "json"
+            }).then(function (response) {
+                console.log(response);
+
+                lat = reponse.coord.lat;
+                lon = response.coord.lon;
+
+                var uvDiv = $("<div class='uv'>");
+
+                var pFour = $("<p>").text("UV Index: " + response.value);
+                uvDiv.append(pFour);
+
+                $("#jumbo").append(uvDiv);
+
+
+            })
+        }
+
     })
 };
-
 var lat;
 var lon;
 
-// function displayUV(lat, lon) {
-//     var queryURL = "http://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f"
-
-//     $.ajax({
-//         url: queryURL,
-//         method: "GET",
-//         dataType: "json"
-//     }).then(function (response) {
-//         console.log(response);
-
-//         lat = reponse.coord.lat;
-//         lon = response.coord.lon;
-
-//         var uvDiv = $("<div class='uv'>");
-
-//         var pFour = $("<p>").text("UV Index: " + "value");
-//         uvDiv.append(pFour);
-
-//         $("#jumbo").append(uvDiv);
-
-//         displayUV(lat, lon);
-
-
-//     })
-// }
 
 function displayForecast(city) {
     console.log(city);
@@ -110,9 +107,16 @@ function displayForecast(city) {
     })
 }
 
-
 // read value from localstorage and if null set to [], JSON.parse
-var previousCities = [];
+var previousCities = localStorage.getItem("previousCities");
+    if (previousCities){
+        previousCities = JSON.parse(previousCities);
+    }
+    else {
+        previousCities = [];
+    }
+        
+    printPrevious(previousCities);
 
 // function renderCities(){
 //     $("#cityList").empty();
@@ -131,37 +135,45 @@ $("#search").on("click", function (event) {
 
     var city = $("#city-input").val().trim();
 
+    if (city === null) {
+        return;
+    }
 
-// push to the previousCities array
+    // push to the previousCities array
     previousCities.push(city);
-
-
-
 
     // // update previousCities in localstorage (JSON.stringify)
     localStorage.setItem("previousCities", JSON.stringify(previousCities));
+    console.log(previousCities);
 
-    // // create a div
-    var cityDiv = $("<div class='cities'>");
-    // // add the city to the div
-    cityDiv.append(city);
+   
+    var places = localStorage.getItem("previousCities");
+        places = JSON.parse(places);
+
+    printPrevious(places);
+
     // // preprend that div to your cityList in DOM
-    cityDiv.prepend(previousCities);
-
-    // var all_previousCities = JSON.parse(localStorage.getItem("all_previousCities"));
-
-    
-    //         var storedCities= localStorage.setItem("previousCities", JSON.stringify(previousCities));
-    //         console.log(storedCities);
-    //     }
-    //     var all_previousCities = JSON.parse(localStorage.getItem("all_previousCities"));
-        
-    //     cityDiv.prepend(previousCities);
-
-    // }
-    // searchWorks();
+    // ("#list-1").append(cityDiv);
 
     displayCurrent(city);
-    // displayUV(lat, lon);
     displayForecast(city);
+    displayUV(lat, lon);
 });
+
+function printPrevious(cities){
+    if (!cities){
+        return;
+    }
+    $(".list-group").empty();
+    for (var i=0; i < cities.length; i++){
+        // // create a div
+    var cityDiv = $("<li class='cities list-group-item'>");
+    cityDiv.attr("value", cities[i])
+    cityDiv.text(cities[i]);
+    $(".list-group").append(cityDiv);
+    }
+}
+
+$(".cities").on("click", function (event) {
+  var clickedCity = $(event.target).attr('value');
+})

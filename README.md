@@ -39,3 +39,7 @@ You are required to submit the following for review:
 
 - - -
 © 2019 Trilogy Education Services, a 2U, Inc. brand. All Rights Reserved.
+
+screenshot of application: 
+
+link to deployed application: https://kaitlinkenney.github.io/weatherdashboard/

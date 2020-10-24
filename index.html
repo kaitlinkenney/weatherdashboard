@@ -14,29 +14,33 @@
     <h1>Weather Dashboard</h1>
 
     <form>
-        <div class="form-row align-items-center" style="margin-left: 15px;">
+        <div class="form-row align-items-center"style="margin-left: 15px;">
             <div class="col-sm-3 my-1">
                 <label class="sr-only" for="inlineFormInputName">City Search</label>
                 <input type="text" class="form-control" id="city-input" placeholder="Search for a city">
+                
             </div>
             <div class="col-auto my-1">
                 <button type="submit" class="btn btn-primary" id="search">Search</button>
             </div>
+            
         </div>
     </form>
+    <ul class="list-group" style="margin-left: 15px; margin-right: 900px;">
+      </ul>
+    
 
     <div class="jumbotron jumbotron-fluid" id="jumbo"
-        style="margin-left: 450px; margin-right: 20px; margin-top: -40px;">
-        <div class="container">
-            <img src="http://openweathermap.org/img/w/" id=weather_image/>
-            <h2 class="display-4"></h2>
-            <p class="lead"></p>
+        style="margin-left: 450px; margin-right: 20px; margin-top: -200px;">
+        <div class="container"> 
+                <h2 class="display-4"></h2>
+                <p class="lead"></p>
         </div>
     </div>
 
     <h3> Five Day Forecast: </h3>
     <div class="row">
-        <div class="card" id="one" style="width: 12rem; height: 12rem;">
+        <div class="card" id="one" style="width: 12rem; height: 12rem; margin-left: 300px;">
             <div class="card-body">
                 <p class="card-text"></p>
             </div>
