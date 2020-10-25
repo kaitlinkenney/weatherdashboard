@@ -2,7 +2,7 @@
 
 Use the [OpenWeather API](https://openweathermap.org/api) to retrieve weather data for cities. The documentation includes a section called "How to start" that will provide basic setup and usage instructions. Use `localStorage` to store any persistent data.
 
-Provide the user the ability to search for a city.
+Provide the user the ability to search for a city. (please enter city only, no state or province)
 Show the current and future 5 day forecast for that city.
 Present the city name, the date, an icon representation of weather conditions, the temperature, 
 the humidity the wind speed, and the UV index (the color should indicate whether the conditions 
