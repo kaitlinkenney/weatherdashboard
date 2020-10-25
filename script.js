@@ -9,7 +9,7 @@ function displayCurrent(city) {
 
     $.ajax({
         type: "GET",
-        url: "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f",
+        url: "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f",
         dataType: "json",
     }).then(function (response) {
         console.log(response);
@@ -45,7 +45,7 @@ function displayCurrent(city) {
 
 
 function displayUV(lat, lon) {
-    var queryURL = "http://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f"
+    var queryURL = "https://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f"
 
     $.ajax({
         url: queryURL,
