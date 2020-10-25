@@ -67,8 +67,8 @@ function displayUV(lat, lon) {
     })
 }
 
-function showPosition (response) {
-    lat =  response.coord.lat;
+function showPosition(response) {
+    lat = response.coord.lat;
     lon = response.coord.lon;
 
     displayUV(lat, lon);
@@ -76,7 +76,6 @@ function showPosition (response) {
 
 var lat;
 var lon;
-
 
 function displayForecast(city) {
     console.log(city);
@@ -106,13 +105,11 @@ function displayForecast(city) {
                 $(".card").append(forecastDiv, response.list[i]);
 
             }
-            
+
         }
 
     })
 }
-
-
 
 //on click for history that will run the searchClick.
 $("#search").on("click", function (event) {
@@ -131,9 +128,9 @@ $("#search").on("click", function (event) {
     localStorage.setItem("previousCities", JSON.stringify(previousCities));
     console.log(previousCities);
 
-   
+
     var places = localStorage.getItem("previousCities");
-        places = JSON.parse(places);
+    places = JSON.parse(places);
 
     printPrevious(places);
 
@@ -143,32 +140,32 @@ $("#search").on("click", function (event) {
 
 // read value from localstorage and if null set to [], JSON.parse
 var previousCities = localStorage.getItem("previousCities");
-    if (previousCities){
-        previousCities = JSON.parse(previousCities);
-    }
-    else {
-        previousCities = [];
-    }
-        
-    printPrevious(previousCities);
+if (previousCities) {
+    previousCities = JSON.parse(previousCities);
+}
+else {
+    previousCities = [];
+}
 
-function printPrevious(cities){
-    if (!cities){
+printPrevious(previousCities);
+
+function printPrevious(cities) {
+    if (!cities) {
         return;
     }
     $(".list-group").empty();
-    for (var i=0; i < cities.length; i++){
+    for (var i = 0; i < cities.length; i++) {
         // // create a div
-    var cityDiv = $("<li class='cities list-group-item'>");
-    cityDiv.attr("value", cities[i])
-    cityDiv.text(cities[i]);
-    $(".list-group").append(cityDiv);
+        var cityDiv = $("<li class='cities list-group-item'>");
+        cityDiv.attr("value", cities[i])
+        cityDiv.text(cities[i]);
+        $(".list-group").append(cityDiv);
     }
 }
 
 $(".cities").on("click", function (event) {
-  var clickedCity = $(event.target).attr('value');
+    var clickedCity = $(event.target).attr('value');
 
-  displayCurrent(clickedCity);
-  displayForecast(clickedCity);
+    displayCurrent(clickedCity);
+    displayForecast(clickedCity);
 })
