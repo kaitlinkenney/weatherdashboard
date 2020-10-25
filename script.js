@@ -16,7 +16,7 @@ function displayCurrent(city) {
         $(".weather").empty();
 
         var weatherDiv = $("<div class='weather'>");
-        ;
+
         var currentDate = moment().format("L");
         pZero = $("<p>").text("Date: " + currentDate);
         weatherDiv.append(pZero);
@@ -40,32 +40,40 @@ function displayCurrent(city) {
 
         $("#jumbo").append(weatherDiv);
 
-        function displayUV(lat, lon) {
-            var queryURL = "http://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f"
-
-            $.ajax({
-                url: queryURL,
-                method: "GET",
-                dataType: "json"
-            }).then(function (response) {
-                console.log(response);
-
-                lat = reponse.coord.lat;
-                lon = response.coord.lon;
-
-                var uvDiv = $("<div class='uv'>");
-
-                var pFour = $("<p>").text("UV Index: " + response.value);
-                uvDiv.append(pFour);
-
-                $("#jumbo").append(uvDiv);
-
-
-            })
-        }
-
     })
 };
+
+
+function displayUV(lat, lon) {
+    var queryURL = "http://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f"
+
+    $.ajax({
+        url: queryURL,
+        method: "GET",
+        dataType: "json"
+    }).then(function (response) {
+        console.log(response);
+
+
+        var uvDiv = $("<div class='uv'>");
+
+        var uvIndex = response
+        pFour = $("<p>").text("UV Index: " + uvIndex);
+        uvDiv.append(pFour);
+
+        $("#jumbo").append(uvDiv);
+
+
+    })
+}
+
+function showPosition (response) {
+    lat =  response.coord.lat;
+    lon = response.coord.lon;
+
+    displayUV(lat, lon);
+}
+
 var lat;
 var lon;
 
@@ -79,6 +87,7 @@ function displayForecast(city) {
         dataType: "json"
     }).then(function (response) {
         console.log(response);
+        $(".forecast").empty();
 
         for (var i = 0; i < response.list.length; i++) {
             if (response.list[i]["dt_txt"].indexOf("15:00:00") !== -1) {
@@ -93,41 +102,17 @@ function displayForecast(city) {
                 var pTwo = $("<p>").text("Humidity: " + humid + "%");
                 forecastDiv.append(pTwo);
 
-                // $("#one").append(forecastDiv);
-                // $("#two").append(forecastDiv);
-                // $("#three").append(forecastDiv);
-                // $("#four").append(forecastDiv);
+
                 $(".card").append(forecastDiv, response.list[i]);
 
-
             }
+            
         }
-
 
     })
 }
 
-// read value from localstorage and if null set to [], JSON.parse
-var previousCities = localStorage.getItem("previousCities");
-    if (previousCities){
-        previousCities = JSON.parse(previousCities);
-    }
-    else {
-        previousCities = [];
-    }
-        
-    printPrevious(previousCities);
 
-// function renderCities(){
-//     $("#cityList").empty();
-
-//     for (var i = 0; i < previousCities.length; i++);
-//     var a = $("<button>")
-//     a.addClass("city-row");
-//     a.attr("data-name", previousCities[i]);
-//     a.text(previousCities[i]);
-//     $("#cityList").append(a);
-// }
 
 //on click for history that will run the searchClick.
 $("#search").on("click", function (event) {
@@ -152,13 +137,20 @@ $("#search").on("click", function (event) {
 
     printPrevious(places);
 
-    // // preprend that div to your cityList in DOM
-    // ("#list-1").append(cityDiv);
-
     displayCurrent(city);
     displayForecast(city);
-    displayUV(lat, lon);
 });
+
+// read value from localstorage and if null set to [], JSON.parse
+var previousCities = localStorage.getItem("previousCities");
+    if (previousCities){
+        previousCities = JSON.parse(previousCities);
+    }
+    else {
+        previousCities = [];
+    }
+        
+    printPrevious(previousCities);
 
 function printPrevious(cities){
     if (!cities){
@@ -176,4 +168,7 @@ function printPrevious(cities){
 
 $(".cities").on("click", function (event) {
   var clickedCity = $(event.target).attr('value');
+
+  displayCurrent(clickedCity);
+  displayForecast(clickedCity);
 })
