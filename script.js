@@ -5,8 +5,6 @@ function displayCurrent(city) {
 
     console.log(city);
 
-    //var queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f";
-
     $.ajax({
         type: "GET",
         url: "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f",
@@ -20,12 +18,7 @@ function displayCurrent(city) {
         var currentDate = moment().format("L");
         pZero = $("<p>").text("Date: " + currentDate);
         weatherDiv.append(pZero);
-        // $("#weather_image").attr("src", response.list[0].weather[0].icon+".png");
-        // var iconUrl = response.list[0].weather[0].icon;
-        // var iconImage = $("<img>");
-        // iconImage.attr("src", "http://openweathermap.org/img/w/");
-        // iconImage.append(iconUrl);
-
+        
         var tempF = (response.main.temp - 273.15) * 1.80 + 32;
         var pOne = $("<p>").text("Temperature: " + tempF.toFixed(2) + " Farenheit");
         weatherDiv.append(pOne);
@@ -43,7 +36,6 @@ function displayCurrent(city) {
     })
 };
 
-
 function displayUV(lat, lon) {
     var queryURL = "https://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f"
 
@@ -54,7 +46,6 @@ function displayUV(lat, lon) {
     }).then(function (response) {
         console.log(response);
 
-
         var uvDiv = $("<div class='uv'>");
 
         var uvIndex = response
@@ -62,7 +53,6 @@ function displayUV(lat, lon) {
         uvDiv.append(pFour);
 
         $("#jumbo").append(uvDiv);
-
 
     })
 }
@@ -79,7 +69,7 @@ var lon;
 
 function displayForecast(city) {
     console.log(city);
-    //var queryURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f";
+    
     $.ajax({
         type: "GET",
         url: "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f",
