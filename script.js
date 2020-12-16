@@ -10,10 +10,14 @@ function displayCurrent(city) {
         url: "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f",
         dataType: "json",
     }).then(function (response) {
-        console.log(response);
+        console.log("day", response);
         $(".weather").empty();
 
         var weatherDiv = $("<div class='weather'>");
+        var icon = $("<img>").attr("src", "http://openweathermap.org/img/w/" + response.weather[0].icon + ".png")
+
+        // pMystery = $("<p>").icon;
+        weatherDiv.append(icon)
 
         var currentDate = moment().format("L");
         pZero = $("<p>").text("Date: " + currentDate);
@@ -31,14 +35,18 @@ function displayCurrent(city) {
         var pThree = $("<p>").text("Wind speed: " + windSpeed + " MPH");
         weatherDiv.append(pThree);
 
+        var lat = response.coord.lat;
+        var lon = response.coord.lon;
+        displayUV(lat, lon);
+
         $("#jumbo").append(weatherDiv);
 
     })
 };
 
-function displayUV(lat, lon) {
-    var queryURL = "https://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f"
-
+function displayUV(x, y) {
+    console.log("hi");
+    var queryURL = "https://api.openweathermap.org/data/2.5/uvi?lat=" + x + "&lon=" + y + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f"
     $.ajax({
         url: queryURL,
         method: "GET",
@@ -46,26 +54,24 @@ function displayUV(lat, lon) {
     }).then(function (response) {
         console.log(response);
 
+        var uvI = response.value;
+        console.log("hi")
+        console.log(uvI);
+
         var uvDiv = $("<div class='uv'>");
 
-        var uvIndex = response
-        pFour = $("<p>").text("UV Index: " + uvIndex);
+        pFour = $("<p>").text("UV Index: " + uvI);
         uvDiv.append(pFour);
 
         $("#jumbo").append(uvDiv);
 
+        // function getUV(lat, lon){
+
+        // }
+
     })
 }
 
-function showPosition(response) {
-    lat = response.coord.lat;
-    lon = response.coord.lon;
-
-    displayUV(lat, lon);
-}
-
-var lat;
-var lon;
 
 function displayForecast(city) {
     console.log(city);
@@ -75,16 +81,26 @@ function displayForecast(city) {
         url: "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=fd9e64d7b57ef3d61cfb920579f1e31f",
         dataType: "json"
     }).then(function (response) {
-        console.log(response);
+        console.log("five day", response);
         $(".forecast").empty();
 
-        for (var i = 0; i < response.list.length; i++) {
-            if (response.list[i]["dt_txt"].indexOf("15:00:00") !== -1) {
+        for (var i = 5; i < response.list.length; i= i+8) {
+            // if (response.list[i]["dt_txt"].indexOf("15:00:00") !== -1) {
 
                 var forecastDiv = $("<div class='forecast'>");
 
+                // var day = new Date();
+                // var nextDay = new Date(day);
+                // nextDay.setDate(day.getDate() + 1);
+                // console.log(nextDay)
+
+                var nextDay = moment(response.list[i].dt_txt).format("L");
+                console.log(nextDay);
+
+
                 var tempF = (response.list[i].main.temp - 273.15) * 1.80 + 32;
                 var pOne = $("<p>").text("Temperature: " + tempF.toFixed(2) + " Farenheit");
+                forecastDiv.append(nextDay);
                 forecastDiv.append(pOne);
 
                 var humid = response.list[i].main.humidity;
@@ -95,8 +111,8 @@ function displayForecast(city) {
                 $(".card").append(forecastDiv, response.list[i]);
 
             }
+        // }
 
-        }
 
     })
 }
