@@ -53,6 +53,7 @@ function displayUV(x, y) {
         dataType: "json"
     }).then(function (response) {
         console.log(response);
+        $(".uv").empty();
 
         var uvI = response.value;
         console.log("hi")
@@ -64,10 +65,6 @@ function displayUV(x, y) {
         uvDiv.append(pFour);
 
         $("#jumbo").append(uvDiv);
-
-        // function getUV(lat, lon){
-
-        // }
 
     })
 }
@@ -85,14 +82,10 @@ function displayForecast(city) {
         $(".forecast").empty();
 
         for (var i = 5; i < response.list.length; i= i+8) {
-            // if (response.list[i]["dt_txt"].indexOf("15:00:00") !== -1) {
 
                 var forecastDiv = $("<div class='forecast'>");
 
-                // var day = new Date();
-                // var nextDay = new Date(day);
-                // nextDay.setDate(day.getDate() + 1);
-                // console.log(nextDay)
+                
 
                 var nextDay = moment(response.list[i].dt_txt).format("L");
                 console.log(nextDay);
